@@ -10,7 +10,6 @@
 		<script src="js/vendors/bootstrap.min.js"></script>
 		<script src="js/vendors/rhill-voronoi-core.min.js"></script>
 		<script src="js/extend-voronoi.js"></script>
-		<script src="js/functions.js"></script>
 		<script src="js/sites.js"></script>
 		<script src="js/script.js"></script>
 
@@ -21,15 +20,24 @@
 
 <div class="container">
 	<div class="row">
-		<div class="col-sm-10">
+		<div class="col-sm-12">
+			<div class="btn-group mapStyle">
+				<a href="#" class="btn btn-primary disabled" data-mapStyle="elevation">Elevation</a>
+				<a href="#" class="btn btn-primary" data-mapStyle="food">Food</a>
+				<a href="#" class="btn btn-primary" data-mapStyle="hmmm">hmmm</a>
+			</div>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-sm-12">
 			<div id="canvases">
 				<div id="map"></div>
 				<div id="selectOverlay"></div>
 			</div>
 		</div>
-		<div class="col-sm-2">
-				dasd
-		</div>
+
+
+
 	</div>
 </div>
 

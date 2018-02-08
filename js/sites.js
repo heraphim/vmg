@@ -23,30 +23,27 @@ Sitegen.prototype.generateSites = function() {
 		}
 	}
 }
+
+Sitegen.prototype.disturb = function() {
+	let moveScale = 0.4 * scl;
+	for (let i = 0; i < this.sites.length; i++) {
+		this.sites[i].x = this.sites[i].x + random(-moveScale, moveScale);
+		this.sites[i].y = this.sites[i].y + random(-moveScale, moveScale);
+	}
+}
 Sitegen.prototype.genPerlin = function() {
 	let noiseScale = this.noiseScale;
 	for (let i = 0; i < this.sites.length; i++) {
 		let x = this.sites[i].x;
 		let y = this.sites[i].y;
-		let noiseX = noise(x * noiseScale, y * noiseScale);
-		let noiseY = noise((x + 1000) * noiseScale, (y + 1000) * noiseScale);
-		this.sites[i].noiseX = noiseX;
-		this.sites[i].noiseY = noiseY;
-		this.sites[i].land = (noiseX <= waterThresh) ? false : true;
-	}
-}
-Sitegen.prototype.perlinMove = function() {
-	let moveScale = 3 * scl;
-	for (let i = 0; i < this.sites.length; i++) {
-		let xoff = map(this.sites[i].noiseX, 0, 1, - moveScale, moveScale);
-		let yoff = map(this.sites[i].noiseY, 0, 1, - moveScale, moveScale);
-		this.sites[i].x = this.sites[i].x + xoff;
-		this.sites[i].y = this.sites[i].y + yoff;
+		let sNoise = noise(x * noiseScale, y * noiseScale);
+		this.sites[i].sNoise = sNoise;
+		this.sites[i].land = (sNoise <= waterThresh) ? false : true;
 	}
 }
 Sitegen.prototype.getSites = function() {
 	this.generateSites();
+	this.disturb();
 	this.genPerlin();
-	this.perlinMove();
 	return this.sites;
 }

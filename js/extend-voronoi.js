@@ -9,22 +9,39 @@ Voronoi.prototype.Cell.prototype.draw = function(c, strokeCol) {
 	let halfedges = this.halfedges;
 	let cellCol;
 	// draw the cell
+
 	c.beginShape();
 	c.noStroke();
 	for (let i = halfedges.length - 1; i >= 0; i--) {
 		let r;
 		let g;
 		let b;
-		if (this.site.land == false) {
-			cellCol = '#0B589E';
-		}
-		else {
-			r = floor(map(this.site.noiseX, 0, landTresh, 229, 0));
-			g = floor(map(this.site.noiseX, 0, landTresh, 191, 70));
-			b = floor(map(this.site.noiseX, 0, landTresh, 0, 7));
+		// color the map based on map style
+		if (mapStyle == 'elevation') {
+			if (this.site.land == false) {
+				cellCol = '#0B589E';
+			}
+			else {
+				r = floor(map(this.site.sNoise, 0, 1, 229, 0));
+				g = floor(map(this.site.sNoise, 0, 1, 191, 70));
+				b = floor(map(this.site.sNoise, 0, 1, 0, 7));
 
-			cellCol = c.color(r, g, b);
+				cellCol = c.color(r, g ,b);
+			}
 		}
+		if (mapStyle == 'food') {
+			if (this.site.land == false) {
+				cellCol = '#0B589E';
+			}
+			else {
+				r = floor(map(this.site.sNoise, 0, 1, 0, 255));
+				g = floor(map(this.site.sNoise, 0, 1, 0, 255));
+				b = floor(map(this.site.sNoise, 0, 1, 0, 255));
+
+				cellCol = c.color(r, g ,b);
+			}
+		}
+
 		c.fill(cellCol);
 		let x = halfedges[i].getStartpoint().x;
 		let y = halfedges[i].getStartpoint().y;
@@ -34,7 +51,7 @@ Voronoi.prototype.Cell.prototype.draw = function(c, strokeCol) {
 
 	// draw edges
 	c.strokeWeight(1);
-	strokeCol = (strokeCol) ? strokeCol : 0; // if stroke color is set draw it, otherwise draw same color
+	strokeCol = (strokeCol) ? strokeCol : cellCol; // if stroke color is set draw it, otherwise draw same color
 	c.stroke(strokeCol);
 	for (let i = halfedges.length - 1; i >= 0; i--) {
 		let x1 = halfedges[i].getStartpoint().x;
@@ -62,6 +79,16 @@ Voronoi.prototype.Diagram.prototype.drawSelected = function(cell) {
 	}
 }
 
+Voronoi.prototype.Diagram.prototype.drawChanged = function(cell) {
+	let cells = this.cells;
+	for (var i = 0; i < cells.length; i++) {
+		let thisCel = cells[i];
+		if (thisCel.site.changed) {
+			this.selCel.draw(selectOverlay);
+		}
+	}
+}
+
 Voronoi.prototype.Diagram.prototype.prepareCells = function(cell) {
 	let cells = this.cells;
 	for (let i = 0; i < cells.length; i++) {
@@ -69,12 +96,9 @@ Voronoi.prototype.Diagram.prototype.prepareCells = function(cell) {
 		// check if it's on the edge of the canvas
 		for (let j = 0; j < thisCel.halfedges.length; j++) {
 			if (thisCel.halfedges[j].edge.lSite == null || thisCel.halfedges[j].edge.rSite == null) {
-				thisCel.site.onEdge = true;
+				thisCel.site.ocean = true;
 				thisCel.site.land = false;
-				thisCel.site.noiseX = 0.1;
-			}
-			else {
-				thisCel.site.onEdge = false;
+				thisCel.site.sNoise = 0.1;
 			}
 		}
 		// set the neighbors of each cell
@@ -83,6 +107,7 @@ Voronoi.prototype.Diagram.prototype.prepareCells = function(cell) {
 		for (let j = 0; j < neighborIds.length; j++) {
 			thisCel.neighborIds.push(this.getCellById(neighborIds[j]));
 		}
+		// set the vertices of each cell
 	}
 }
 

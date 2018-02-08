@@ -7,9 +7,10 @@ var sites = [];
 var diagram;
 var voronoi;
 var bbox = {xl: 0, xr: wd, yt: 0, yb: hg};
+var mapStyle = 'elevation';
+var reDraw = true;
+let waterThresh = 0.41;
 
-let waterThresh = 0.37;
-let landTresh = 0.65;
 
 // initiate p5 so I can have access to general function
 function setup() {
@@ -22,18 +23,21 @@ function draw() {
 var m = function(m) {
 	m.setup = function() {
 		m.createCanvas(wd, hg);
-	}
-
-	m.draw = function() {
 		sitegen = new Sitegen(rows, cols);
 		sites = sitegen.getSites();
 		voronoi = new Voronoi();
 		diagram = voronoi.compute(sites, bbox);
 		diagram.prepareCells(); // prepare the diagram, with othe modifications
 		console.log(diagram);
-		console.log('%c -----------------------------------------------------------------------', 'background: #f4df42; color: #f4df42');
-		diagram.draw(m);
-		m.noLoop();
+	}
+
+	m.draw = function() {
+		if (reDraw) {
+			console.log('%c -----------------------------------------------------------------------', 'background: #f4df42; color: #f4df42');
+			diagram.draw(m);
+			reDraw = false;
+		}
+		diagram.drawChanged(m);
 	}
 }
 var map = new p5(m, 'map');
@@ -58,5 +62,12 @@ $(document).ready(function() {
         let selCell = diagram.getCellById(cellId);
         console.log(selCell);
         diagram.setSelCell(selCell);
+	});
+	$('.mapStyle .btn').click(function(e) {
+		e.preventDefault();
+		mapStyle = $(this).attr('data-mapStyle');
+		$('.mapStyle .btn').removeClass('disabled');
+		$(this).addClass('disabled');
+		reDraw = true;
 	});
 });
