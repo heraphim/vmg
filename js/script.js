@@ -1,4 +1,4 @@
-var scl = 25;
+var scl = 20;
 var wd = 900;
 var hg = 800;
 var cols = wd / scl;

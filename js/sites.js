@@ -8,11 +8,6 @@ function Sitegen(rows, cols) {
 }
 
 Sitegen.prototype.generateSites = function() {
-	// for (let i = 0, j = 500; i < 500; i++, j++){
-	// 	let x = noise(i*0.1) * 900;
-	// 	let y = noise(j*0.1) * 800;
-	// 	this.sites.push({x, y});
-	// }
 	let rows = this.rows;
 	let cols = this.cols;
 	for(let dy = 0; dy < rows; dy++) {
@@ -35,15 +30,16 @@ Sitegen.prototype.genPerlin = function() {
 		let y = this.sites[i].y;
 		let noiseX = noise(x * noiseScale, y * noiseScale);
 		let noiseY = noise((x + 1000) * noiseScale, (y + 1000) * noiseScale);
-		this.sites[i].noiseX = 0.5;
-		this.sites[i].noiseY = 0.5;
+		this.sites[i].noiseX = noiseX;
+		this.sites[i].noiseY = noiseY;
 		this.sites[i].land = (noiseX <= waterThresh) ? false : true;
 	}
 }
 Sitegen.prototype.perlinMove = function() {
+	let moveScale = 3 * scl;
 	for (let i = 0; i < this.sites.length; i++) {
-		let xoff = map(this.sites[i].noiseX, 0, 1, -(1 * scl), 1 * scl);
-		let yoff = map(this.sites[i].noiseY, 0, 1, - (1 * scl), 1 * scl);
+		let xoff = map(this.sites[i].noiseX, 0, 1, - moveScale, moveScale);
+		let yoff = map(this.sites[i].noiseY, 0, 1, - moveScale, moveScale);
 		this.sites[i].x = this.sites[i].x + xoff;
 		this.sites[i].y = this.sites[i].y + yoff;
 	}
@@ -51,6 +47,6 @@ Sitegen.prototype.perlinMove = function() {
 Sitegen.prototype.getSites = function() {
 	this.generateSites();
 	this.genPerlin();
-	// this.perlinMove();
+	this.perlinMove();
 	return this.sites;
 }

@@ -19,9 +19,9 @@ Voronoi.prototype.Cell.prototype.draw = function(c, strokeCol) {
 			cellCol = '#0B589E';
 		}
 		else {
-			r = round(map(this.site.noiseX, 0, landTresh, 229, 0));
-			g = round(map(this.site.noiseX, 0, landTresh, 191, 70));
-			b = round(map(this.site.noiseX, 0, landTresh, 0, 7));
+			r = floor(map(this.site.noiseX, 0, landTresh, 229, 0));
+			g = floor(map(this.site.noiseX, 0, landTresh, 191, 70));
+			b = floor(map(this.site.noiseX, 0, landTresh, 0, 7));
 
 			cellCol = c.color(r, g, b);
 		}
@@ -34,8 +34,8 @@ Voronoi.prototype.Cell.prototype.draw = function(c, strokeCol) {
 
 	// draw edges
 	c.strokeWeight(1);
-	strokeCol = (strokeCol) ? strokeCol : cellCol; // if stroke color is set draw it, otherwise draw same color
-	c.stroke(0);
+	strokeCol = (strokeCol) ? strokeCol : 0; // if stroke color is set draw it, otherwise draw same color
+	c.stroke(strokeCol);
 	for (let i = halfedges.length - 1; i >= 0; i--) {
 		let x1 = halfedges[i].getStartpoint().x;
 		let y1 = halfedges[i].getStartpoint().y;
