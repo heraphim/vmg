@@ -1,0 +1,18 @@
+body {
+	background-color: #cecece;
+}
+
+#canvases {
+	position: relative;
+}
+#map, #selectOverlay {
+	position: absolute;
+	top: 0;
+	left: 0;
+}
+#map {
+	z-index: 1;
+}
+#selectOverlay {
+	z-index: 2;
+}
