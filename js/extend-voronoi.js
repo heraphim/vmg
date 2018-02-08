@@ -9,33 +9,33 @@ Voronoi.prototype.Cell.prototype.draw = function(c, strokeCol) {
 	let halfedges = this.halfedges;
 	let cellCol;
 	// draw the cell
-	c.beginShape();
-	c.noStroke();
-	for (let i = halfedges.length - 1; i >= 0; i--) {
-		let r;
-		let g;
-		let b;
-		if (this.site.land == false) {
-			cellCol = '#0B589E';
-		}
-		else {
-			r = round(map(this.site.noiseX, 0, landTresh, 229, 0));
-			g = round(map(this.site.noiseX, 0, landTresh, 191, 70));
-			b = round(map(this.site.noiseX, 0, landTresh, 0, 7));
+	// c.beginShape();
+	// c.noStroke();
+	// for (let i = halfedges.length - 1; i >= 0; i--) {
+	// 	let r;
+	// 	let g;
+	// 	let b;
+	// 	if (this.site.land == false) {
+	// 		cellCol = '#0B589E';
+	// 	}
+	// 	else {
+	// 		r = round(map(this.site.noiseX, 0, landTresh, 229, 0));
+	// 		g = round(map(this.site.noiseX, 0, landTresh, 191, 70));
+	// 		b = round(map(this.site.noiseX, 0, landTresh, 0, 7));
 
-			cellCol = c.color(r, g, b);
-		}
-		c.fill(cellCol);
-		let x = halfedges[i].getStartpoint().x;
-		let y = halfedges[i].getStartpoint().y;
-		c.vertex(x, y);
-	}
-	c.endShape(CLOSE);
+	// 		cellCol = c.color(r, g, b);
+	// 	}
+	// 	c.fill(cellCol);
+	// 	let x = halfedges[i].getStartpoint().x;
+	// 	let y = halfedges[i].getStartpoint().y;
+	// 	c.vertex(x, y);
+	// }
+	// c.endShape(CLOSE);
 
 	// draw edges
 	c.strokeWeight(1);
-	strokeCol = (strokeCol) ? strokeCol : cellCol; // if stroke color is set draw it, otherwise draw same color
-	c.stroke(0);
+	strokeCol = (strokeCol) ? strokeCol : 0; // if stroke color is set draw it, otherwise draw same color
+	c.stroke(strokeCol);
 	for (let i = halfedges.length - 1; i >= 0; i--) {
 		let x1 = halfedges[i].getStartpoint().x;
 		let y1 = halfedges[i].getStartpoint().y;
@@ -44,12 +44,12 @@ Voronoi.prototype.Cell.prototype.draw = function(c, strokeCol) {
 		c.line(x1, y1, x2, y2);
 	}
 
-	// // draw site
-	// let x = this.site.x;
-	// let y = this.site.y;
-	// c.stroke(point);
-	// c.strokeWeight(3);
-	// c.point(x, y);
+	// draw site
+	let x = this.site.x;
+	let y = this.site.y;
+	c.stroke('red');
+	c.strokeWeight(3);
+	c.point(x, y);
 }
 
 Voronoi.prototype.Diagram.prototype.setSelCell = function(cell) {
